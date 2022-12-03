@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Pokedex from "pokedex-promise-v2";
+import PokemonCard from "./components/PokemonCard";
+import styled from "styled-components";
 const options = {
 	protocol: "https",
 	versionPath: "/api/v2/",
@@ -51,28 +53,55 @@ function App() {
 	}
 
 	return (
-		<div className="App">
-			<header className="App-header">
-				<button onClick={() => handleClick(previous)}>Previous</button>
-        <button onClick={() => handleClick(next)}>Next</button>
-        <br></br>
-				{loaded &&
-					data.map((pokemon, index) => (
-						<>
-							<img
-								key={index}
-								src={pokemon.sprites.front_default}
-								alt={pokemon.sprites.front_default}
-							></img>
-							<h2 key={pokemon.id}>{pokemon.name}</h2>
-						</>
-					))}
-				<p>test</p>
+		<AppContainer className="App">
+			<StyledHeader className="App-header">
 				<button onClick={() => handleClick(previous)}>Previous</button>
 				<button onClick={() => handleClick(next)}>Next</button>
-			</header>
-		</div>
+				<br></br>
+			</StyledHeader>
+			<CardWrapper>
+				{loaded &&
+					data.map((pokemon) => (
+						<PokemonCard
+							key={pokemon.id}
+							pokemon={pokemon}
+						></PokemonCard>
+					))}
+			</CardWrapper>
+			<StyledFooter>
+				<button onClick={() => handleClick(previous)}>Previous</button>
+				<button onClick={() => handleClick(next)}>Next</button>
+			</StyledFooter>
+		</AppContainer>
 	);
 }
+
+const CardWrapper = styled.section`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 69vw;
+	flex-wrap: wrap;
+`;
+
+const StyledHeader = styled.header`
+	background-color: #3d7dca;
+	min-height: 10vh;
+	width: inherit;
+`;
+const StyledFooter = styled.footer`
+	background-color: #3d7dca;
+	min-height: 10vh;
+	width: inherit;
+`;
+
+const AppContainer = styled.div`
+	background-color: #fffbfe;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+`;
 
 export default App;
