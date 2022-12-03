@@ -15,6 +15,7 @@ function App() {
 	const [loaded, setLoaded] = useState(false);
 	const [next, setNext] = useState("");
 	const [previous, setPrevious] = useState("");
+	const [team, setTeam] = useState([]);
 
 	useEffect(() => {
 		let ignore = false;
@@ -53,6 +54,11 @@ function App() {
 		window.scrollTo(0, 0);
 	}
 
+	function onPokemonSelect(pokemon) {
+    setTeam((team) => [...team, pokemon]);
+    console.log("team -> {}" , team)
+	}
+
 	return (
 		<AppContainer className="App">
 			<StyledHeader className="App-header">
@@ -64,9 +70,15 @@ function App() {
 						<PokemonCard
 							key={pokemon.id}
 							pokemon={pokemon}
+							onPokemonSelect={onPokemonSelect}
 						></PokemonCard>
 					))}
 			</CardWrapper>
+			<div>
+				{team.map((pokemon) => (
+					<div>{pokemon}</div>
+				))}
+			</div>
 			<StyledFooter>
 				<TeamButton onClick={() => handleClick(previous)}>
 					Previous

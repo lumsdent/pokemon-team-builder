@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+
 import styled from "styled-components";
 
-function PokemonCard({ key, pokemon }) {
+function PokemonCard({ key, pokemon, onPokemonSelect }) {
+	const [disabled, setDisabled] = useState(false);
+
+	function handleClick() {
+		console.log("clicked");
+		setDisabled(true);
+		console.log(pokemon);
+		onPokemonSelect(pokemon.name);
+	}
+
 	return (
 		<Card className="card-wrapper">
 			<img
@@ -18,13 +28,17 @@ function PokemonCard({ key, pokemon }) {
 				))}
 			</TypeWrapper>
 			<TeamButtonWrapper>
-				<TeamButton>Add to Team</TeamButton>
+				<TeamButton disabled={disabled} onClick={handleClick}>
+					{!disabled && "Add to Team"} {disabled && "On your Team"}
+				</TeamButton>
 			</TeamButtonWrapper>
 		</Card>
 	);
 }
 
-function toCapitalCase(prop) {
+export default PokemonCard;
+
+export function toCapitalCase(prop) {
 	return prop.charAt(0).toUpperCase().concat(prop.substring(1));
 }
 const Card = styled.div`
@@ -48,9 +62,13 @@ const TeamButton = styled.button`
 	color: #fffbfe;
 	&:hover {
 		background-color: #729ed4;
+		cursor: pointer;
+	}
+	&:disabled {
+		background-color: gray;
+		cursor: auto;
 	}
 `;
-
 
 const TeamButtonWrapper = styled.div`
 	display: flex;
@@ -169,4 +187,3 @@ const TypeWrapper = styled.div`
 	display: flex;
 	margin: 5px;
 `;
-export default PokemonCard;
