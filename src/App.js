@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Pokedex from "pokedex-promise-v2";
 import PokemonCard from "./components/PokemonCard";
 import styled from "styled-components";
+import "./App.css";
 const options = {
 	protocol: "https",
 	versionPath: "/api/v2/",
@@ -55,9 +56,7 @@ function App() {
 	return (
 		<AppContainer className="App">
 			<StyledHeader className="App-header">
-				<button onClick={() => handleClick(previous)}>Previous</button>
-				<button onClick={() => handleClick(next)}>Next</button>
-				<br></br>
+				<Title>Pokemon Team Builder</Title>
 			</StyledHeader>
 			<CardWrapper>
 				{loaded &&
@@ -69,8 +68,10 @@ function App() {
 					))}
 			</CardWrapper>
 			<StyledFooter>
-				<button onClick={() => handleClick(previous)}>Previous</button>
-				<button onClick={() => handleClick(next)}>Next</button>
+				<TeamButton onClick={() => handleClick(previous)}>
+					Previous
+				</TeamButton>
+				<TeamButton onClick={() => handleClick(next)}>Next</TeamButton>
 			</StyledFooter>
 		</AppContainer>
 	);
@@ -85,14 +86,35 @@ const CardWrapper = styled.section`
 `;
 
 const StyledHeader = styled.header`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: #3d7dca;
+	box-shadow: 0px 3px 5px gray;
+	min-height: 10vh;
+	width: inherit;
+	margin: auto;
+`;
+const StyledFooter = styled.footer`
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background-color: #3d7dca;
 	min-height: 10vh;
 	width: inherit;
 `;
-const StyledFooter = styled.footer`
+
+const TeamButton = styled.button`
+	margin: 5px;
 	background-color: #3d7dca;
-	min-height: 10vh;
-	width: inherit;
+	border-radius: 4px;
+	border: none;
+	padding: 5px;
+	color: #fffbfe;
+	&:hover {
+		background-color: #729ed4;
+	}
 `;
 
 const AppContainer = styled.div`
@@ -102,6 +124,13 @@ const AppContainer = styled.div`
 	width: 100%;
 	align-items: center;
 	justify-content: center;
+`;
+
+const Title = styled.h1`
+	font-family: "pokefont";
+	font-size: 64px;
+	color: #ffcb05;
+	-webkit-text-stroke: 1px black;
 `;
 
 export default App;

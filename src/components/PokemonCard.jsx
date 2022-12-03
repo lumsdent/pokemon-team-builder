@@ -9,22 +9,27 @@ function PokemonCard({ key, pokemon }) {
 				src={pokemon.sprites.front_default}
 				alt={pokemon.sprites.front_default}
 			></img>
-			<h2 key={pokemon.id}>{toCapitalCase(pokemon.name)}</h2>
-			{pokemon.types.map((type, index) => (
-				<Type key={index} className={type.type.name}>
-					{toCapitalCase(type.type.name)}
-				</Type>
-			))}
+			<Title key={pokemon.id}>{toCapitalCase(pokemon.name)}</Title>
+			<TypeWrapper>
+				{pokemon.types.map((type, index) => (
+					<Type key={index} className={type.type.name}>
+						{toCapitalCase(type.type.name)}
+					</Type>
+				))}
+			</TypeWrapper>
+			<TeamButtonWrapper>
+				<TeamButton>Add to Team</TeamButton>
+			</TeamButtonWrapper>
 		</Card>
 	);
 }
 
 function toCapitalCase(prop) {
-	return prop.charAt(0).toUpperCase().concat( prop.substring(1));
+	return prop.charAt(0).toUpperCase().concat(prop.substring(1));
 }
 const Card = styled.div`
 	background-color: #fffbfe;
-	border-radius: 5%;
+	border-radius: 10px;
 	box-shadow: 3px 3px 5px gray;
 	display: flex;
 	flex-direction: column;
@@ -34,7 +39,41 @@ const Card = styled.div`
 	margin: 10px;
 `;
 
+const TeamButton = styled.button`
+	margin: 5px;
+	background-color: #3d7dca;
+	border-radius: 4px;
+	border: none;
+	padding: 5px;
+	color: #fffbfe;
+	&:hover {
+		background-color: #729ed4;
+	}
+`;
+
+
+const TeamButtonWrapper = styled.div`
+	display: flex;
+	justify-content: center;
+	border-top: 1px solid gray;
+	width: 100%;
+	background-color: #eeedf0;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+`;
+const Title = styled.div`
+	font-size: 24px;
+`;
+
 const Type = styled.div`
+	text-shadow: 0px 1px 1px #807870;
+	border-style: solid none;
+	border-width: 1px;
+	border-radius: 5px;
+	padding: 0.15em;
+	font-size: 9pt;
+	color: #f8f8f8;
+
 	&.grass {
 		background: #78c850;
 		border-top-color: #c0f860;
@@ -125,14 +164,9 @@ const Type = styled.div`
 		border-top-color: #f5cad1;
 		border-bottom-color: #905f63;
 	}
-
-	text-shadow: 0px 1px 1px #807870;
-	border-style: solid none;
-	border-width: 1px;
-	border-radius: 5px;
-	padding: 0.15em;
-	font-size: 9pt;
-	color: #f8f8f8;
 `;
-
+const TypeWrapper = styled.div`
+	display: flex;
+	margin: 5px;
+`;
 export default PokemonCard;
