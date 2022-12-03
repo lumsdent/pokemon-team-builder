@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Pokedex from "pokedex-promise-v2";
 import PokemonCard from "./components/PokemonCard";
+import TeamPokemonCard from "./components/TeamPokemonCard";
 import styled from "styled-components";
 import "./App.css";
 const options = {
@@ -55,8 +56,13 @@ function App() {
 	}
 
 	function onPokemonSelect(pokemon) {
-    setTeam((team) => [...team, pokemon]);
-    console.log("team -> {}" , team)
+		if (team.length < 6) {
+			setTeam((team) => [...team, pokemon]);
+		}
+	}
+	function removePokemonFromTeam(pokemon) {
+		const newTeam = team.filter((teamer) => teamer.id !== pokemon.id);
+		setTeam([...newTeam]);
 	}
 
 	return (
@@ -64,21 +70,29 @@ function App() {
 			<StyledHeader className="App-header">
 				<Title>Pokemon Team Builder</Title>
 			</StyledHeader>
-			<CardWrapper>
-				{loaded &&
-					data.map((pokemon) => (
-						<PokemonCard
-							key={pokemon.id}
+			<StyledSection>
+				<CardWrapper>
+					{loaded &&
+						data.map((pokemon) => (
+							<PokemonCard
+								key={"Wrapper_".concat(pokemon.id)}
+								id={pokemon.id}
+								pokemon={pokemon}
+								onPokemonSelect={onPokemonSelect}
+							></PokemonCard>
+						))}
+				</CardWrapper>
+				<TeamWrapper>
+					<Title className="small">PokeTeam</Title>
+					{team.map((pokemon) => (
+						<TeamPokemonCard
+							key={"Teamer_".concat(pokemon.id)}
 							pokemon={pokemon}
-							onPokemonSelect={onPokemonSelect}
-						></PokemonCard>
+							removePokemonFromTeam={removePokemonFromTeam}
+						></TeamPokemonCard>
 					))}
-			</CardWrapper>
-			<div>
-				{team.map((pokemon) => (
-					<div>{pokemon}</div>
-				))}
-			</div>
+				</TeamWrapper>
+			</StyledSection>
 			<StyledFooter>
 				<TeamButton onClick={() => handleClick(previous)}>
 					Previous
@@ -117,6 +131,17 @@ const StyledFooter = styled.footer`
 	width: inherit;
 `;
 
+const StyledSection = styled.section`
+	display: flex;
+`;
+const TeamWrapper = styled.div`
+	width: 30vw;
+	background-color: #003a70;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
+
 const TeamButton = styled.button`
 	margin: 5px;
 	background-color: #3d7dca;
@@ -143,6 +168,10 @@ const Title = styled.h1`
 	font-size: 64px;
 	color: #ffcb05;
 	-webkit-text-stroke: 1px black;
+	&.small {
+		font-size: 36px;
+		margin: 15px;
+	}
 `;
 
 export default App;

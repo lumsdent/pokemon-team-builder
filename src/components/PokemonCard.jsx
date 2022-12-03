@@ -2,23 +2,18 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 
-function PokemonCard({ key, pokemon, onPokemonSelect }) {
-	const [disabled, setDisabled] = useState(false);
-
+function PokemonCard({ id, pokemon, onPokemonSelect }) {
 	function handleClick() {
-		console.log("clicked");
-		setDisabled(true);
-		console.log(pokemon);
-		onPokemonSelect(pokemon.name);
+		onPokemonSelect(pokemon);
 	}
 
 	return (
 		<Card className="card-wrapper">
-			<img
-				key={key}
-				src={pokemon.sprites.front_default}
+			<DreamAvatar
+				key={"img_".concat(id)}
+				src={pokemon.sprites.other.dream_world.front_default}
 				alt={pokemon.sprites.front_default}
-			></img>
+			></DreamAvatar>
 			<Title key={pokemon.id}>{toCapitalCase(pokemon.name)}</Title>
 			<TypeWrapper>
 				{pokemon.types.map((type, index) => (
@@ -28,9 +23,7 @@ function PokemonCard({ key, pokemon, onPokemonSelect }) {
 				))}
 			</TypeWrapper>
 			<TeamButtonWrapper>
-				<TeamButton disabled={disabled} onClick={handleClick}>
-					{!disabled && "Add to Team"} {disabled && "On your Team"}
-				</TeamButton>
+				<TeamButton onClick={handleClick}>Add to Team</TeamButton>
 			</TeamButtonWrapper>
 		</Card>
 	);
@@ -51,6 +44,11 @@ const Card = styled.div`
 	align-items: center;
 	justify-content: center;
 	margin: 10px;
+`;
+
+const DreamAvatar = styled.img`
+	height: 225px;
+	width: 225px;
 `;
 
 const TeamButton = styled.button`
