@@ -2,3 +2,9 @@
 	font-family: pokefont;
 	src: url(../public/Ketchum-WeeV.ttf);
 }
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}

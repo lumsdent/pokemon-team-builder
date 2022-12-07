@@ -1,68 +1,20 @@
 import React from "react";
 import styled from "styled-components";
-import { StyledButton, StyledLink } from "./Layout";
+import { toCapitalCase } from "./PokemonCard";
 
-function PokemonCard({ id, pokemon, onPokemonSelect }) {
-	function handleClick() {
-		onPokemonSelect(pokemon);
-	}
-
+function Type({ types }) {
 	return (
-		<Card className="card-wrapper">
-			<StyledLink to={"detail/".concat(pokemon.id)}>
-				<DreamAvatar
-					key={"img_".concat(id)}
-					src={pokemon.sprites.other.dream_world.front_default}
-					alt={pokemon.sprites.front_default}
-				></DreamAvatar>
-				<Title key={pokemon.id}>{toCapitalCase(pokemon.name)}</Title>
-				<TypeWrapper>
-					{pokemon.types.map((type, index) => (
-						<Type key={index} className={type.type.name}>
-							{toCapitalCase(type.type.name)}
-						</Type>
-					))}
-				</TypeWrapper>
-			</StyledLink>
-			<TeamButtonWrapper>
-				<StyledButton onClick={handleClick}>Add to Team</StyledButton>
-			</TeamButtonWrapper>
-		</Card>
+		<TypeWrapper>
+			{types.map((type, index) => (
+				<TypeContent key={index} className={type}>
+					{toCapitalCase(type)}
+				</TypeContent>
+			))}
+		</TypeWrapper>
 	);
 }
 
-export default PokemonCard;
-
-export function toCapitalCase(prop) {
-	return prop.charAt(0).toUpperCase().concat(prop.substring(1));
-}
-
-const Card = styled.div`
-	background-color: #fffbfe;
-	border-radius: 10px;
-	box-shadow: 3px 3px 5px gray;
-	margin: 10px;
-`;
-
-const DreamAvatar = styled.img`
-	height: 225px;
-	width: 225px;
-`;
-
-const TeamButtonWrapper = styled.div`
-	display: flex;
-	justify-content: center;
-	border-top: 1px solid gray;
-	width: 100%;
-	background-color: #eeedf0;
-	border-bottom-right-radius: 10px;
-	border-bottom-left-radius: 10px;
-`;
-const Title = styled.div`
-	font-size: 24px;
-`;
-
-export const Type = styled.div`
+const TypeContent = styled.div`
 	text-shadow: 0px 1px 1px #807870;
 	border-style: solid none;
 	border-width: 1px;
@@ -162,7 +114,9 @@ export const Type = styled.div`
 		border-bottom-color: #905f63;
 	}
 `;
-export const TypeWrapper = styled.div`
+const TypeWrapper = styled.div`
 	display: flex;
 	margin: 5px;
 `;
+
+export default Type;

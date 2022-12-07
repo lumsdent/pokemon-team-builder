@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Pokedex from "pokedex-promise-v2";
-import { Link } from "react-router-dom";
+import { OutletWrapper, StyledLink } from "./Layout";
 
 const options = {
 	protocol: "https",
@@ -28,8 +28,8 @@ function Detail() {
 	}, [id]);
 
 	return (
-		<div>
-			<Link to="/">Return</Link>
+		<OutletWrapper>
+			<StyledLink to="/">Return</StyledLink>
 			{loaded && (
 				<>
 					<h2>{pokemon.name}</h2>
@@ -46,7 +46,7 @@ function Detail() {
 					))}
 				</>
 			)}
-		</div>
+		</OutletWrapper>
 	);
 }
 

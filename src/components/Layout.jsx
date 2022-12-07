@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Pokedex from "pokedex-promise-v2";
-import TeamPokemonCard from "./TeamPokemonCard";
+import Team from "./Team";
 import styled from "styled-components";
 import "../App.css";
-import { Outlet } from "react-router-dom";
+import { Outlet, Link } from "react-router-dom";
+import Filters from "./Filters";
 
 const options = {
 	protocol: "https",
@@ -63,9 +64,12 @@ function Layout() {
 	return (
 		<AppContainer className="App">
 			<StyledHeader className="App-header">
-				<Title>Pokemon Team Builder</Title>
+				<StyledLink to="/">
+					<Title>Pokemon Team Builder</Title>
+				</StyledLink>
 			</StyledHeader>
 			<StyledSection>
+				<Filters></Filters>
 				<Outlet
 					context={{
 						loaded: [loaded, setLoaded],
@@ -75,22 +79,18 @@ function Layout() {
 						previous: [previous, setPrevious],
 					}}
 				></Outlet>
-				<TeamWrapper>
-					<Title className="small">PokeTeam</Title>
-					{team.map((pokemon) => (
-						<TeamPokemonCard
-							key={"Teamer_".concat(pokemon.id)}
-							pokemon={pokemon}
-							removePokemonFromTeam={removePokemonFromTeam}
-						></TeamPokemonCard>
-					))}
-				</TeamWrapper>
+				<Team
+					team={team}
+					removePokemonFromTeam={removePokemonFromTeam}
+				></Team>
 			</StyledSection>
 			<StyledFooter>
-				<TeamButton onClick={() => handleClick(previous)}>
+				<StyledButton onClick={() => handleClick(previous)}>
 					Previous
-				</TeamButton>
-				<TeamButton onClick={() => handleClick(next)}>Next</TeamButton>
+				</StyledButton>
+				<StyledButton onClick={() => handleClick(next)}>
+					Next
+				</StyledButton>
 			</StyledFooter>
 		</AppContainer>
 	);
@@ -100,9 +100,26 @@ const AppContainer = styled.div`
 	background-color: #fffbfe;
 	display: flex;
 	flex-direction: column;
-	width: 100%;
+	width: 100vw;
 	align-items: center;
 	justify-content: center;
+	margin: 0;
+`;
+
+export const ColumnWrapper = styled.div`
+	background-color: #003a70;
+	width: 25vw;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+`;
+
+export const OutletWrapper = styled.section`
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50vw;
+	flex-wrap: wrap;
 `;
 
 const StyledHeader = styled.header`
@@ -125,19 +142,20 @@ const StyledFooter = styled.footer`
 	width: inherit;
 `;
 
+export const StyledLink = styled(Link)`
+	display: flex;
+	flex-direction: column;
+	text-decoration: none;
+	justify-content: center;
+	align-items: center;
+	color: black;
+`;
+
 const StyledSection = styled.section`
 	display: flex;
 `;
 
-const TeamWrapper = styled.div`
-	width: 30vw;
-	background-color: #003a70;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-`;
-
-const TeamButton = styled.button`
+export const StyledButton = styled.button`
 	margin: 5px;
 	background-color: #3d7dca;
 	border-radius: 4px;
@@ -146,10 +164,15 @@ const TeamButton = styled.button`
 	color: #fffbfe;
 	&:hover {
 		background-color: #729ed4;
+		cursor: pointer;
+	}
+	&:disabled {
+		background-color: gray;
+		cursor: auto;
 	}
 `;
 
-const Title = styled.h1`
+export const Title = styled.h1`
 	font-family: "pokefont";
 	font-size: 64px;
 	color: #ffcb05;

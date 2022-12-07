@@ -3,6 +3,8 @@ import "./App.css";
 import Home from "./components/Home";
 import Detail from "./components/Detail";
 import Layout from "./components/Layout";
+import Evaluation from "./components/Evaluation";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -15,6 +17,10 @@ function App() {
 						<Route
 							path={"/detail/:id"}
 							element={<Detail></Detail>}
+						></Route>
+						<Route
+							path="evaluate"
+							element={<Evaluation></Evaluation>}
 						></Route>
 					</Route>
 				</Routes>

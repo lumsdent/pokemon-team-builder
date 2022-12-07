@@ -1,8 +1,8 @@
 import React from "react";
 import PokemonCard from "./PokemonCard";
-import styled from "styled-components";
 import "../App.css";
 import { useOutletContext } from "react-router-dom";
+import { OutletWrapper } from "./Layout";
 
 function Home() {
 	const {
@@ -19,7 +19,7 @@ function Home() {
 	}
 
 	return (
-		<CardWrapper>
+		<OutletWrapper>
 			{loaded &&
 				data.map((pokemon) => (
 					<PokemonCard
@@ -29,16 +29,10 @@ function Home() {
 						onPokemonSelect={onPokemonSelect}
 					></PokemonCard>
 				))}
-		</CardWrapper>
+		</OutletWrapper>
 	);
 }
 
-const CardWrapper = styled.section`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	max-width: 69vw;
-	flex-wrap: wrap;
-`;
+
 
 export default Home;
