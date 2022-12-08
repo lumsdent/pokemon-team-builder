@@ -15,11 +15,9 @@ const P = new Pokedex(options);
 
 function Evaluation() {
 	const {
-		data: [data],
-		team: [team, setTeam],
+		team: [team],
 	} = useOutletContext();
 	const [loaded, setLoaded] = useState(false);
-	const [types, setTypes] = useState([]);
 	const [pokeObj, setPokeObj] = useState([]);
 
 	useMemo(() => {
@@ -27,6 +25,15 @@ function Evaluation() {
 			setPokeObj([]);
 			//for each pokemon
 			console.log(team);
+			let teamWeakness = [];
+			let teamStrength = [];
+			let { results } = await P.getResource(
+				"https://pokeapi.co/api/v2/type"
+			);
+			let allTypes = results
+				.map((object) => object.name)
+				.filter((type) => type !== "unknown" && type !== "shadow");
+
 			for (let pokemon of team) {
 				let typesList = [];
 				//get data on both of their types
@@ -39,9 +46,11 @@ function Evaluation() {
 					);
 					for (let type of damage_relations.double_damage_from) {
 						weakFrom.push(type.name);
+						teamWeakness.push(type.name);
 					}
 					for (let type of damage_relations.half_damage_from) {
 						resistFrom.push(type.name);
+						teamStrength.push(type.name);
 					}
 					for (let type of damage_relations.no_damage_from) {
 						noDamageFrom.push(type.name);
@@ -84,6 +93,14 @@ function Evaluation() {
 				console.log(pokemonObj);
 				setPokeObj((oldState) => [...oldState, pokemonObj]);
 			}
+			let weaknessMagnitude = count(teamWeakness);
+
+			console.log("WM", weaknessMagnitude);
+			console.log("TS", teamStrength);
+			let missingResistances = allTypes.filter(
+				(type) => !teamStrength.includes(type)
+			);
+			console.log(missingResistances);
 			setLoaded(true);
 		};
 		if (!loaded) {
@@ -170,6 +187,19 @@ function Evaluation() {
 			</StyledDiv>
 		</OutletWrapper>
 	);
+}
+
+function count(arr) {
+	const count = {};
+
+	for (const element of arr) {
+		if (count[element]) {
+			count[element] += 1;
+		} else {
+			count[element] = 1;
+		}
+	}
+	return count;
 }
 
 function getDuplicates(array) {
