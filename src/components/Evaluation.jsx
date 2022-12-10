@@ -19,6 +19,8 @@ function Evaluation() {
 	} = useOutletContext();
 	const [loaded, setLoaded] = useState(false);
 	const [pokeObj, setPokeObj] = useState([]);
+	const [weakness, setWeakness] = useState();
+	const [missingResist, setMissingResist] = useState();
 
 	useMemo(() => {
 		const getTypes = async () => {
@@ -50,13 +52,13 @@ function Evaluation() {
 					}
 					for (let type of damage_relations.half_damage_from) {
 						resistFrom.push(type.name);
+						//TODO need to add no damage list
 						teamStrength.push(type.name);
 					}
 					for (let type of damage_relations.no_damage_from) {
 						noDamageFrom.push(type.name);
 					}
 					typesList.push(typeObj.type.name);
-					console.log("I am here", typeObj.type.name);
 				}
 				//if half damage and double damage type, they cancel and should be removed
 				//in no damage table
@@ -93,13 +95,15 @@ function Evaluation() {
 				console.log(pokemonObj);
 				setPokeObj((oldState) => [...oldState, pokemonObj]);
 			}
+			//TODO need to use 4x and double damage lists to count.  otherwise double counting 4x weakness
 			let weaknessMagnitude = count(teamWeakness);
-
+			setWeakness(weaknessMagnitude);
 			console.log("WM", weaknessMagnitude);
 			console.log("TS", teamStrength);
 			let missingResistances = allTypes.filter(
 				(type) => !teamStrength.includes(type)
 			);
+			setMissingResist(missingResistances);
 			console.log(missingResistances);
 			setLoaded(true);
 		};
@@ -135,6 +139,8 @@ function Evaluation() {
 		<OutletWrapper>
 			<StyledDiv>
 				<h1>Team Summary</h1>
+				<h2>{missingResist}</h2>
+			
 
 				{loaded &&
 					pokeObj.map((pokemon) => (
