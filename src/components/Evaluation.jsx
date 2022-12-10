@@ -5,6 +5,7 @@ import Pokedex from "pokedex-promise-v2";
 import styled from "styled-components";
 import PokemonCard, { toCapitalCase } from "./PokemonCard";
 import Type from "./Type";
+import { Pokeobj } from "../Definitions";
 
 const options = {
 	protocol: "https",
@@ -23,7 +24,7 @@ function Evaluation() {
 	const [missingResist, setMissingResist] = useState();
 
 	useMemo(() => {
-		const getTypes = async () => {
+		(async () => {
 			setPokeObj([]);
 			//for each pokemon
 			console.log(team);
@@ -48,15 +49,14 @@ function Evaluation() {
 					);
 					for (let type of damage_relations.double_damage_from) {
 						weakFrom.push(type.name);
-						teamWeakness.push(type.name);
 					}
 					for (let type of damage_relations.half_damage_from) {
 						resistFrom.push(type.name);
-						//TODO need to add no damage list
 						teamStrength.push(type.name);
 					}
 					for (let type of damage_relations.no_damage_from) {
 						noDamageFrom.push(type.name);
+						teamStrength.push(type.name);
 					}
 					typesList.push(typeObj.type.name);
 				}
@@ -80,6 +80,7 @@ function Evaluation() {
 						!resistFrom.includes(type) &&
 						!fourXDamage.includes(type)
 				);
+				teamWeakness.push(...fourXDamage, ...halfDamage);
 
 				const pokemonObj = new Pokeobj(
 					pokemon.id,
@@ -92,56 +93,25 @@ function Evaluation() {
 					doubleDamage,
 					fourXDamage
 				);
-				console.log(pokemonObj);
 				setPokeObj((oldState) => [...oldState, pokemonObj]);
 			}
-			//TODO need to use 4x and double damage lists to count.  otherwise double counting 4x weakness
+			console.log(teamWeakness);
 			let weaknessMagnitude = count(teamWeakness);
 			setWeakness(weaknessMagnitude);
-			console.log("WM", weaknessMagnitude);
-			console.log("TS", teamStrength);
 			let missingResistances = allTypes.filter(
 				(type) => !teamStrength.includes(type)
 			);
 			setMissingResist(missingResistances);
-			console.log(missingResistances);
 			setLoaded(true);
-		};
-		if (!loaded) {
-			getTypes();
-		}
+		})();
 	}, [team]);
 
-	class Pokeobj {
-		constructor(
-			id,
-			name,
-			types,
-			sprite,
-			noDamage,
-			quarterDamage,
-			halfDamage,
-			doubleDamage,
-			fourXDamage
-		) {
-			this.id = id;
-			this.name = name;
-			this.types = types;
-			this.sprite = sprite;
-			this.noDamage = noDamage;
-			this.quarterDamage = quarterDamage;
-			this.halfDamage = halfDamage;
-			this.doubleDamage = doubleDamage;
-			this.fourXDamage = fourXDamage;
-		}
-	}
 	return (
 		<OutletWrapper>
 			<StyledDiv>
 				<h1>Team Summary</h1>
-				<h2>{missingResist}</h2>
-			
-
+				<p>{missingResist}</p>
+				<p>{JSON.stringify(weakness)}</p>
 				{loaded &&
 					pokeObj.map((pokemon) => (
 						<Pokemon key={pokemon.id}>

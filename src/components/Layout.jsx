@@ -5,6 +5,7 @@ import styled from "styled-components";
 import "../App.css";
 import { Outlet, Link } from "react-router-dom";
 import Filters from "./Filters";
+import { Pokeobj } from "../Definitions";
 
 const options = {
 	protocol: "https",
@@ -21,26 +22,22 @@ function Layout() {
 	const [team, setTeam] = useState([]);
 
 	useEffect(() => {
-		let ignore = false;
-		let pokemon = [];
-		const loadData = async () => {
+		(async () => {
+			let pokemon = [];
 			pokemon = await P.getPokemonsList({ limit: 20, offset: 0 });
 			loadPokemonData(pokemon);
-		};
-
-		if (!ignore) {
-			loadData();
-		}
-
-		return () => {
-			ignore = true;
-		};
+			let allPokemon = await P.getPokemonsList();
+			loadPokemonData(allPokemon);
+		})();
 	}, []);
 
 	async function loadPokemonData(pokemon) {
 		let pokemonData = [];
 		for (let mon of pokemon.results) {
 			let data = await P.getResource(mon.url);
+			let pokemon = new Pokeobj(
+				
+			)
 			console.log(data);
 			pokemonData.push(data);
 		}
@@ -69,7 +66,7 @@ function Layout() {
 				</StyledLink>
 			</StyledHeader>
 			<StyledSection>
-				<Filters></Filters>
+				<Filters loadPokemonData={loadPokemonData}></Filters>
 				<Outlet
 					context={{
 						loaded: [loaded, setLoaded],
