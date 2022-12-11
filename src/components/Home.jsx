@@ -6,6 +6,7 @@ import { OutletWrapper } from "./Layout";
 
 function Home() {
 	const {
+		refs,
 		loaded: [loaded],
 		data: [data],
 		team: [team, setTeam],
@@ -23,6 +24,7 @@ function Home() {
 			{loaded &&
 				data.map((pokemon) => (
 					<PokemonCard
+						refs={refs}
 						key={"Wrapper_".concat(pokemon.id)}
 						id={pokemon.id}
 						pokemon={pokemon}
@@ -32,7 +34,5 @@ function Home() {
 		</OutletWrapper>
 	);
 }
-
-
 
 export default Home;

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import "../App.css";
 import { Outlet, Link } from "react-router-dom";
 import Filters from "./Filters";
-import { PokemonDetail, Pokeobj, Stats } from "../Definitions";
+import { PokemonDetail, Stats } from "../Definitions";
 
 const options = {
 	protocol: "https",
@@ -15,61 +15,59 @@ const options = {
 const P = new Pokedex(options);
 
 function Layout() {
-	const [data, setData] = useState([]);
+	const [pokemon, setPokemon] = useState([]);
 	const [loaded, setLoaded] = useState(false);
-	const [next, setNext] = useState("");
-	const [previous, setPrevious] = useState("");
 	const [team, setTeam] = useState([]);
+	const refs = pokemon.reduce((a, b) => {
+		a[b.id] = React.createRef();
+		return a;
+	}, {});
 
 	useEffect(() => {
 		(async () => {
 			let pokemon = [];
-			pokemon = await P.getPokemonsList({ limit: 20, offset: 0 });
+			pokemon = await P.getPokemonsList();
 			loadPokemonData(pokemon);
-			let allPokemon = await P.getPokemonsList();
-			loadPokemonData(allPokemon);
 		})();
 	}, []);
 
 	async function loadPokemonData(pokemon) {
 		let pokemonData = [];
+		let counter = 0;
 		for (let mon of pokemon.results) {
+			if (counter === 20) {
+				setPokemon([...pokemonData]);
+				setLoaded(true);
+				counter = 0;
+			}
 			let data = await P.getResource(mon.url);
-			let pokemon = new PokemonDetail(
-				data.id,
-				data.name,
-				getTypes(data),
-				data.sprites.other.dream_world.front_default,
-				data.sprites.front_default,
-				new Stats(
-					data.stats[0].base_stat,
-					data.stats[1].base_stat,
-					data.stats[2].base_stat,
-					data.stats[3].base_stat,
-					data.stats[4].base_stat,
-					data.stats[5].base_stat
-				)
-			);
-			// console.log(pokemon);
-			pokemonData.push(pokemon);
+			pokemonData.push(buildPokemon(data));
+			counter++;
 		}
-		setData([...pokemonData]);
-		setNext(pokemon.next);
-		setPrevious(pokemon.previous);
-		setLoaded(true);
+	}
+
+	function buildPokemon(data) {
+		return new PokemonDetail(
+			data.id,
+			data.name,
+			getTypes(data),
+			data.sprites.other.dream_world.front_default,
+			data.sprites.front_default,
+			new Stats(
+				data.stats[0].base_stat,
+				data.stats[1].base_stat,
+				data.stats[2].base_stat,
+				data.stats[3].base_stat,
+				data.stats[4].base_stat,
+				data.stats[5].base_stat
+			)
+		);
 	}
 
 	function getTypes(data) {
 		let types = [];
-		data.types.forEach((type) => types.push(type.type.name));
+		data.types.forEach((type) => types.push(type.type));
 		return types;
-	}
-
-	async function handleClick(url) {
-		setLoaded(false);
-		let pokemon = await P.getResource(url);
-		loadPokemonData(pokemon);
-		window.scrollTo(0, 0);
 	}
 
 	function removePokemonFromTeam(pokemon) {
@@ -84,14 +82,16 @@ function Layout() {
 				</StyledLink>
 			</StyledHeader>
 			<StyledSection>
-				<Filters loadPokemonData={loadPokemonData}></Filters>
+				<Filters
+					refs={refs}
+					loadPokemonData={loadPokemonData}
+				></Filters>
 				<Outlet
 					context={{
+						refs: refs,
 						loaded: [loaded, setLoaded],
-						data: [data, setData],
+						data: [pokemon, setPokemon],
 						team: [team, setTeam],
-						next: [next, setNext],
-						previous: [previous, setPrevious],
 					}}
 				></Outlet>
 				<Team
@@ -99,14 +99,7 @@ function Layout() {
 					removePokemonFromTeam={removePokemonFromTeam}
 				></Team>
 			</StyledSection>
-			<StyledFooter>
-				<StyledButton onClick={() => handleClick(previous)}>
-					Previous
-				</StyledButton>
-				<StyledButton onClick={() => handleClick(next)}>
-					Next
-				</StyledButton>
-			</StyledFooter>
+			<StyledFooter></StyledFooter>
 		</AppContainer>
 	);
 }

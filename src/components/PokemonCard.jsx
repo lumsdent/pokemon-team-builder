@@ -2,13 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import { StyledButton, StyledLink } from "./Layout";
 
-function PokemonCard({ id, pokemon, onPokemonSelect }) {
+function PokemonCard({ id, pokemon, onPokemonSelect, refs }) {
 	function handleClick() {
 		onPokemonSelect(pokemon);
 	}
 
 	return (
-		<Card className="card-wrapper">
+		<Card className="card-wrapper" ref = {refs[pokemon.id]}>
 			<StyledLink to={"detail/".concat(pokemon.id)}>
 				<DreamAvatar
 					key={"img_".concat(id)}
@@ -20,8 +20,8 @@ function PokemonCard({ id, pokemon, onPokemonSelect }) {
 				<Title key={pokemon.id}>{toCapitalCase(pokemon.name)}</Title>
 				<TypeWrapper>
 					{pokemon.types.map((type, index) => (
-						<Type key={index} className={type}>
-							{toCapitalCase(type)}
+						<Type key={index} className={type.name}>
+							{toCapitalCase(type.name)}
 						</Type>
 					))}
 				</TypeWrapper>

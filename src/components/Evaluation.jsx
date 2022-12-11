@@ -44,9 +44,7 @@ function Evaluation() {
 				let resistFrom = [];
 				let noDamageFrom = [];
 				for (let typeObj of pokemon.types) {
-					let { damage_relations } = await P.getResource(
-						typeObj.type.url
-					);
+					let { damage_relations } = await P.getResource(typeObj.url);
 					for (let type of damage_relations.double_damage_from) {
 						weakFrom.push(type.name);
 					}
@@ -58,7 +56,7 @@ function Evaluation() {
 						noDamageFrom.push(type.name);
 						teamStrength.push(type.name);
 					}
-					typesList.push(typeObj.type.name);
+					typesList.push(typeObj.name);
 				}
 				//if half damage and double damage type, they cancel and should be removed
 				//in no damage table
@@ -86,7 +84,7 @@ function Evaluation() {
 					pokemon.id,
 					pokemon.name,
 					typesList,
-					pokemon.sprites.front_default,
+					pokemon.default_sprite,
 					noDamage,
 					quarterDamage,
 					halfDamage,
