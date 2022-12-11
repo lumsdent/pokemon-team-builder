@@ -12,14 +12,16 @@ function PokemonCard({ id, pokemon, onPokemonSelect }) {
 			<StyledLink to={"detail/".concat(pokemon.id)}>
 				<DreamAvatar
 					key={"img_".concat(id)}
-					src={pokemon.sprites.other.dream_world.front_default}
-					alt={pokemon.sprites.front_default}
+					src={
+						pokemon.sprite ? pokemon.sprite : pokemon.default_sprite
+					}
+					alt={pokemon.name}
 				></DreamAvatar>
 				<Title key={pokemon.id}>{toCapitalCase(pokemon.name)}</Title>
 				<TypeWrapper>
 					{pokemon.types.map((type, index) => (
-						<Type key={index} className={type.type.name}>
-							{toCapitalCase(type.type.name)}
+						<Type key={index} className={type}>
+							{toCapitalCase(type)}
 						</Type>
 					))}
 				</TypeWrapper>

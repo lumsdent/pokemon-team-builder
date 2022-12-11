@@ -11,7 +11,7 @@ function TeamPokemonCard({ pokemon, removePokemonFromTeam }) {
 
 	return (
 		<Card>
-			<img src={pokemon.sprites.front_default} alt="test"></img>
+			<img src={pokemon.default_sprite} alt={pokemon.name}></img>
 			<h4>{toCapitalCase(pokemon.name)}</h4>
 			<StyledButton onClick={handleClick}>
 				<FontAwesomeIcon icon={solid("x")} />

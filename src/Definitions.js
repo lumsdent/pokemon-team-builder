@@ -22,7 +22,7 @@ export class Pokeobj {
 	}
 }
 
-export class pokemonDetail {
+export class PokemonDetail {
 	constructor(id, name, types, sprite, default_sprite, stats) {
 		this.id = id;
 		this.name = name;

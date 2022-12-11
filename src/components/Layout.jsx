@@ -5,7 +5,7 @@ import styled from "styled-components";
 import "../App.css";
 import { Outlet, Link } from "react-router-dom";
 import Filters from "./Filters";
-import { Pokeobj } from "../Definitions";
+import { PokemonDetail, Pokeobj, Stats } from "../Definitions";
 
 const options = {
 	protocol: "https",
@@ -35,16 +35,34 @@ function Layout() {
 		let pokemonData = [];
 		for (let mon of pokemon.results) {
 			let data = await P.getResource(mon.url);
-			let pokemon = new Pokeobj(
-				
-			)
-			console.log(data);
-			pokemonData.push(data);
+			let pokemon = new PokemonDetail(
+				data.id,
+				data.name,
+				getTypes(data),
+				data.sprites.other.dream_world.front_default,
+				data.sprites.front_default,
+				new Stats(
+					data.stats[0].base_stat,
+					data.stats[1].base_stat,
+					data.stats[2].base_stat,
+					data.stats[3].base_stat,
+					data.stats[4].base_stat,
+					data.stats[5].base_stat
+				)
+			);
+			// console.log(pokemon);
+			pokemonData.push(pokemon);
 		}
 		setData([...pokemonData]);
 		setNext(pokemon.next);
 		setPrevious(pokemon.previous);
 		setLoaded(true);
+	}
+
+	function getTypes(data) {
+		let types = [];
+		data.types.forEach((type) => types.push(type.type.name));
+		return types;
 	}
 
 	async function handleClick(url) {
