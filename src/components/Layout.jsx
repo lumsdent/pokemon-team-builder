@@ -16,15 +16,26 @@ const P = new Pokedex(options);
 
 function Layout() {
 	const [pokemon, setPokemon] = useState([]);
+	const [display, setDisplay] = useState([]);
 	const [loaded, setLoaded] = useState(false);
 	const [team, setTeam] = useState([]);
+	const [types, setTypes] = useState([]);
 	const refs = pokemon.reduce((a, b) => {
 		a[b.id] = React.createRef();
 		return a;
 	}, {});
 
+	async function getAllTypes() {
+		let { results } = await P.getResource("https://pokeapi.co/api/v2/type");
+		let allTypes = results
+			.map((object) => object.name)
+			.filter((type) => type !== "unknown" && type !== "shadow");
+		setTypes(allTypes);
+	}
+
 	useEffect(() => {
 		(async () => {
+			await getAllTypes();
 			let pokemon = [];
 			pokemon = await P.getPokemonsList();
 			loadPokemonData(pokemon);
@@ -37,6 +48,7 @@ function Layout() {
 		for (let mon of pokemon.results) {
 			if (counter === 20) {
 				setPokemon([...pokemonData]);
+				setDisplay([...pokemonData]);
 				setLoaded(true);
 				counter = 0;
 			}
@@ -60,13 +72,20 @@ function Layout() {
 				data.stats[3].base_stat,
 				data.stats[4].base_stat,
 				data.stats[5].base_stat
-			)
+			),
+			getTypeNames(data)
 		);
 	}
 
 	function getTypes(data) {
 		let types = [];
 		data.types.forEach((type) => types.push(type.type));
+		return types;
+	}
+
+	function getTypeNames(data) {
+		let types = [];
+		data.types.forEach((type) => types.push(type.type.name));
 		return types;
 	}
 
@@ -84,14 +103,19 @@ function Layout() {
 			<StyledSection>
 				<Filters
 					refs={refs}
-					loadPokemonData={loadPokemonData}
+					display={display}
+					setDisplay={setDisplay}
+					pokemon={pokemon}
+					types={types}
 				></Filters>
 				<Outlet
 					context={{
 						refs: refs,
+						display: [display, setDisplay],
 						loaded: [loaded, setLoaded],
-						data: [pokemon, setPokemon],
+						pokemon: [pokemon, setPokemon],
 						team: [team, setTeam],
+						types: [types, setTypes],
 					}}
 				></Outlet>
 				<Team

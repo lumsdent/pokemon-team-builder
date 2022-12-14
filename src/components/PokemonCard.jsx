@@ -8,7 +8,7 @@ function PokemonCard({ id, pokemon, onPokemonSelect, refs }) {
 	}
 
 	return (
-		<Card className="card-wrapper" ref = {refs[pokemon.id]}>
+		<Card className="card-wrapper" ref={refs[pokemon.id]}>
 			<StyledLink to={"detail/".concat(pokemon.id)}>
 				<DreamAvatar
 					key={"img_".concat(id)}

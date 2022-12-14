@@ -17,6 +17,7 @@ const P = new Pokedex(options);
 function Evaluation() {
 	const {
 		team: [team],
+		types: [types, setTypes],
 	} = useOutletContext();
 	const [loaded, setLoaded] = useState(false);
 	const [pokeObj, setPokeObj] = useState([]);
@@ -30,12 +31,6 @@ function Evaluation() {
 			console.log(team);
 			let teamWeakness = [];
 			let teamStrength = [];
-			let { results } = await P.getResource(
-				"https://pokeapi.co/api/v2/type"
-			);
-			let allTypes = results
-				.map((object) => object.name)
-				.filter((type) => type !== "unknown" && type !== "shadow");
 
 			for (let pokemon of team) {
 				let typesList = [];
@@ -96,7 +91,7 @@ function Evaluation() {
 			console.log(teamWeakness);
 			let weaknessMagnitude = count(teamWeakness);
 			setWeakness(weaknessMagnitude);
-			let missingResistances = allTypes.filter(
+			let missingResistances = types.filter(
 				(type) => !teamStrength.includes(type)
 			);
 			setMissingResist(missingResistances);
@@ -120,39 +115,68 @@ function Evaluation() {
 								></img>
 								<h2>{toCapitalCase(pokemon.name)}</h2>
 
-								<Type types={pokemon.types}></Type>
+								{pokemon.types.map((type, index) => (
+									<Type type={type} index={index}></Type>
+								))}
 							</SummaryWrapper>
 							<DetailWrapper>
 								<Detail>
 									<h2>Resistances</h2>
 									<div>
 										<h4>{"Half Damage"}</h4>
-										<Type types={pokemon.halfDamage}></Type>
+										{pokemon.halfDamage.map(
+											(type, index) => (
+												<Type
+													type={type}
+													index={index}
+												></Type>
+											)
+										)}
 									</div>
 									<div>
 										<h4>{"Quarter Damage"}</h4>
-										<Type
-											types={pokemon.quarterDamage}
-										></Type>
+										{pokemon.quarterDamage.map(
+											(type, index) => (
+												<Type
+													type={type}
+													index={index}
+												></Type>
+											)
+										)}
 									</div>
 									<div>
 										<h4>{"No Damage"}</h4>
-										<Type types={pokemon.noDamage}></Type>
+										{pokemon.noDamage.map((type, index) => (
+											<Type
+												type={type}
+												index={index}
+											></Type>
+										))}
 									</div>
 								</Detail>
 								<Detail>
 									<h2>Weaknesses</h2>
 									<div>
 										<h4>{"Double Damage"}</h4>
-										<Type
-											types={pokemon.doubleDamage}
-										></Type>
+										{pokemon.doubleDamage.map(
+											(type, index) => (
+												<Type
+													type={type}
+													index={index}
+												></Type>
+											)
+										)}
 									</div>
 									<div>
 										<h4>{"Four X Damage"}</h4>
-										<Type
-											types={pokemon.fourXDamage}
-										></Type>
+										{pokemon.fourXDamage.map(
+											(type, index) => (
+												<Type
+													type={type}
+													index={index}
+												></Type>
+											)
+										)}
 									</div>
 								</Detail>
 							</DetailWrapper>

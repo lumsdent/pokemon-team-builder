@@ -23,13 +23,14 @@ export class Pokeobj {
 }
 
 export class PokemonDetail {
-	constructor(id, name, types, sprite, default_sprite, stats) {
+	constructor(id, name, types, sprite, default_sprite, stats, typeNames) {
 		this.id = id;
 		this.name = name;
 		this.types = types;
 		this.sprite = sprite;
 		this.default_sprite = default_sprite;
 		this.stats = stats;
+		this.typeNames = typeNames;
 	}
 }
 

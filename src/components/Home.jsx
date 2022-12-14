@@ -8,7 +8,8 @@ function Home() {
 	const {
 		refs,
 		loaded: [loaded],
-		data: [data],
+		display: [display],
+		pokemon: [pokemon],
 		team: [team, setTeam],
 	} = useOutletContext();
 
@@ -22,7 +23,7 @@ function Home() {
 	return (
 		<OutletWrapper>
 			{loaded &&
-				data.map((pokemon) => (
+				display.map((pokemon) => (
 					<PokemonCard
 						refs={refs}
 						key={"Wrapper_".concat(pokemon.id)}

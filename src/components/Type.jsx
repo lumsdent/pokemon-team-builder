@@ -2,14 +2,12 @@ import React from "react";
 import styled from "styled-components";
 import { toCapitalCase } from "./PokemonCard";
 
-function Type({ types }) {
+function Type({ type, index }) {
 	return (
 		<TypeWrapper>
-			{types.map((type, index) => (
-				<TypeContent key={index} className={type}>
-					{toCapitalCase(type)}
-				</TypeContent>
-			))}
+			<TypeContent key={index} className={type}>
+				{toCapitalCase(type)}
+			</TypeContent>
 		</TypeWrapper>
 	);
 }
